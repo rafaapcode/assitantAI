@@ -18,7 +18,6 @@ import { useState } from "react"
 import { talk } from "@/lib/ai/language";
 
 export function Chat() {
-  const [open, setOpen] = useState(false)
   const [awaitingLLMResponse, setAwaitingLLMResponse] = useState<boolean>(false);
 
   const [messages, setMessages] = useState([
@@ -33,7 +32,7 @@ export function Chat() {
 
   return (
     <>
-      <Card>
+      <Card className="w-full">
         <CardHeader className="flex flex-row items-center">
           <div className="flex items-center space-x-4">
             <Avatar>
@@ -47,28 +46,26 @@ export function Chat() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {messages.map((message, index) => (
-              <div
-                key={index}
-                className={cn(
-                  "flex w-max max-w-[75%] flex-col gap-2 rounded-lg px-3 py-2 text-sm",
-                  message.role === "user"
-                    ? "ml-auto bg-primary text-primary-foreground"
-                    : "bg-muted"
-                )}
-              >
-                {message.content}
-                {
-                  message.toolbox && (
-                    <div className="border-t-[0.3px] border-slate-300 flex flex-row justify-end">
-                      <Button size={"icon"} variant={"ghost"} className="w-6 h-6 pt-2 hover:bg-transparent hover:text-cyan-700">
-                        <AudioLines />
-                      </Button>
-                    </div>
-                  )
-                }
-              </div>
-            ))}
+            {awaitingLLMResponse ? <div
+              className={cn(
+                "flex w-max m-w-[90%] flex-col gap-2 rounded-lg px-3 py-2 text-sm bg-muted",
+              )}
+            >
+              Gerando Resposta ...
+            </div>
+              : messages.map((message, index) => (
+                <div
+                  key={index}
+                  className={cn(
+                    "flex w-max m-w-[90%] flex-col gap-2 rounded-lg px-3 py-2 text-sm",
+                    message.role === "user"
+                      ? "ml-auto bg-primary text-primary-foreground"
+                      : "bg-muted"
+                  )}
+                >
+                  {message.content}
+                </div>
+              ))}
           </div>
         </CardContent>
         <CardFooter>

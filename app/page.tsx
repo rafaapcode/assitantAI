@@ -1,9 +1,11 @@
-import { SheetWrapper } from "./_components/sheet-wrapper";
+import { Chat } from "./_components/chat";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-end justify-end p-12">
-      <SheetWrapper />
+    <main className="flex w-screen justify-center items-center pt-2 md:p-12">
+      <div className="container">
+        <Chat />
+      </div>
     </main>
   );
 }
