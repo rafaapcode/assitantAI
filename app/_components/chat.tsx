@@ -46,14 +46,7 @@ export function Chat() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {awaitingLLMResponse ? <div
-              className={cn(
-                "flex w-max m-w-[90%] flex-col gap-2 rounded-lg px-3 py-2 text-sm bg-muted",
-              )}
-            >
-              Gerando Resposta ...
-            </div>
-              : messages.map((message, index) => (
+            {messages.map((message, index) => (
                 <div
                   key={index}
                   className={cn(
