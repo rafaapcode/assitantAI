@@ -1,5 +1,5 @@
 "use client";
-import { Check, Send } from "lucide-react"
+import { AudioLines, Check, Send } from "lucide-react"
 import { cn } from "@/lib/utils"
 import {
   Avatar,
@@ -32,48 +32,19 @@ import {
 import { Input } from "@/components/ui/input"
 import { useState } from "react"
 
-// const users = [
-//   {
-//     name: "Olivia Martin",
-//     email: "m@example.com",
-//     avatar: "/avatars/01.png",
-//   },
-//   {
-//     name: "Isabella Nguyen",
-//     email: "isabella.nguyen@email.com",
-//     avatar: "/avatars/03.png",
-//   },
-//   {
-//     name: "Emma Wilson",
-//     email: "emma@example.com",
-//     avatar: "/avatars/05.png",
-//   },
-//   {
-//     name: "Jackson Lee",
-//     email: "lee@example.com",
-//     avatar: "/avatars/02.png",
-//   },
-//   {
-//     name: "William Kim",
-//     email: "will@email.com",
-//     avatar: "/avatars/04.png",
-//   },
-// ] as const
-
-// type User = (typeof users)[number]
-
 export function Chat() {
   const [open, setOpen] = useState(false)
-//   const [selectedUsers, setSelectedUsers] = useState<User[]>([])
 
   const [messages, setMessages] = useState([
     {
       role: "agent",
-      content: "Hi, how can I help you today?",
+      content: "Olá, o que deseja aprender hoje ?",
+      toolbox: true,
     },
     {
       role: "user",
       content: "Hey, I'm having trouble with my account.",
+      toolbox: false,
     }
   ])
   const [input, setInput] = useState("")
@@ -86,11 +57,10 @@ export function Chat() {
           <div className="flex items-center space-x-4">
             <Avatar>
               <AvatarImage src="/avatars/01.png" alt="Image" />
-              <AvatarFallback>OM</AvatarFallback>
+              <AvatarFallback>AS</AvatarFallback>
             </Avatar>
             <div>
-              <p className="text-sm font-medium leading-none">Sofia Davis</p>
-              <p className="text-sm text-muted-foreground">m@example.com</p>
+              <p className="text-sm font-medium leading-none">Assis</p>
             </div>
           </div>
         </CardHeader>
@@ -107,6 +77,15 @@ export function Chat() {
                 )}
               >
                 {message.content}
+                {
+                  message.toolbox && (
+                    <div className="border-t-[0.3px] border-slate-300 flex flex-row justify-end">
+                      <Button size={"icon"} variant={"ghost"} className="w-6 h-6 pt-2 hover:bg-transparent hover:text-cyan-700">
+                        <AudioLines />
+                      </Button>
+                    </div>
+                  )
+                }
               </div>
             ))}
           </div>
@@ -121,6 +100,7 @@ export function Chat() {
                 {
                   role: "user",
                   content: input,
+                  toolbox: false
                 },
               ])
               setInput("")
@@ -129,7 +109,7 @@ export function Chat() {
           >
             <Input
               id="message"
-              placeholder="Type your message..."
+              placeholder="Digite o que deseja aprender..."
               className="flex-1"
               autoComplete="off"
               value={input}
