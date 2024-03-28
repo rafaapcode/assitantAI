@@ -13,38 +13,19 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card"
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { useState } from "react"
+import { talk } from "@/lib/ai/language";
 
 export function Chat() {
   const [open, setOpen] = useState(false)
+  const [awaitingLLMResponse, setAwaitingLLMResponse] = useState<boolean>(false);
 
   const [messages, setMessages] = useState([
     {
       role: "agent",
       content: "Olá, o que deseja aprender hoje ?",
       toolbox: true,
-    },
-    {
-      role: "user",
-      content: "Hey, I'm having trouble with my account.",
-      toolbox: false,
     }
   ])
   const [input, setInput] = useState("")
@@ -92,18 +73,33 @@ export function Chat() {
         </CardContent>
         <CardFooter>
           <form
-            onSubmit={(event) => {
+            onSubmit={async (event) => {
               event.preventDefault()
-              if (inputLength === 0) return
-              setMessages([
-                ...messages,
-                {
-                  role: "user",
-                  content: input,
-                  toolbox: false
-                },
-              ])
-              setInput("")
+              if (inputLength === 0) return;
+              setAwaitingLLMResponse(true);
+              setMessages((prev) => {
+                return [
+                  ...prev,
+                  {
+                    role: "user",
+                    content: input,
+                    toolbox: false
+                  },
+                ]
+              });
+              setInput("");
+              const response = await talk(input);
+              setMessages((prev) => {
+                return [
+                  ...prev,
+                  {
+                    role: "agent",
+                    content: response,
+                    toolbox: true
+                  }
+                ]
+              });
+              setAwaitingLLMResponse(false);
             }}
             className="flex w-full items-center space-x-2"
           >
@@ -115,24 +111,13 @@ export function Chat() {
               value={input}
               onChange={(event: any) => setInput(event.target.value)}
             />
-            <Button type="submit" size="icon" disabled={inputLength === 0}>
+            <Button type="submit" size="icon" disabled={awaitingLLMResponse}>
               <Send className="h-4 w-4" />
               <span className="sr-only">Send</span>
             </Button>
           </form>
         </CardFooter>
       </Card>
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="gap-0 p-0 outline-none">
-          <DialogHeader className="px-4 pb-4 pt-5">
-            <DialogTitle>New message</DialogTitle>
-            <DialogDescription>
-              Invite a user to this thread. This will create a new group
-              message.
-            </DialogDescription>
-          </DialogHeader>
-        </DialogContent>
-      </Dialog>
     </>
   )
 }

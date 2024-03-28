@@ -24,10 +24,7 @@ export function SheetWrapper() {
       </SheetTrigger>
       <SheetContent className="space-y-4">
         <SheetHeader>
-          <SheetTitle>Vamos praticar um idioma ?</SheetTitle>
-          <SheetDescription>
-           Selecione os padrões que deseja.
-          </SheetDescription>
+          <SheetTitle>O que deseja aprender ?</SheetTitle>
         </SheetHeader>
         <div className="grid gap-4 py-4">
           <Chat />
